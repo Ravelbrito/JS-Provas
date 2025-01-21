@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora IMC</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #resultado {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <p><label for="">Digite sua altura</label> 
+            <input type="number" id="altura" placeholder="Digite sua altura"></p>
+    
+        <p><label for="">Digite seu peso</label>
+             <input type="number" id="peso" placeholder="Digite seu peso"></p>
+    
+    
+             <button id="calcular">calcular</button>
+    
+             <p>resultado: <span id="resultado"></span></p>
+    
+    </div>
+    
+    <script>
+        const inputaltura = document.getElementById('altura');
+        const inputpeso = document.getElementById('peso');
+        const botaocalcular = document.getElementById('calcular');
+        const resultadospan = document.getElementById('resultado');
+
+        
+
+        botaocalcular.addEventListener('click', () => {
+
+            const altura = parseFloat(inputaltura.value);
+            const peso = parseFloat(inputpeso.value);
+
+ 
+            const funcaoresultado = function (altura, peso) {
+                return (peso/(altura*altura))
+            };
+
+
+            if (isNaN(altura) | isNaN(peso)) {
+                resultadospan.textContent = 'por favor, insira números válidos';
+                return;
+            }
+
+            const resultado = funcaoresultado(altura, peso).toFixed(2);
+
+            resultadospan.textContent = `Seu IMC é ${resultado}`;
+        });
+    </script>
+</body>
+</html>
