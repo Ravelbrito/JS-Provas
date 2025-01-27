@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tarefas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2C3E50;
+            color: #ECF0F1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #34495E;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 30px;
+            color: #ECF0F1;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .task-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .task-input input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            color: #34495E;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-input button {
+            background-color: #1ABC9C;
+            color: white;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .task-input button:hover {
+            background-color: #16A085;
+        }
+
+        .task-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2C3E50;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+        }
+
+        .task-item.completed span {
+            text-decoration: line-through;
+            color: #BDC3C7;
+        }
+
+        .task-item button {
+            background-color: #E74C3C;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .task-item button:hover {
+            background-color: #C0392B;
+        }
+
+        .task-item input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+
+        .edit-btn {
+            background-color: #F39C12;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background-color: #E67E22;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Tarefas</h1>
+
+        <div class="task-input">
+            <input type="text" id="taskInput" placeholder="Digite uma nova tarefa...">
+            <button id="addTask">Adicionar</button>
+        </div>
+
+        <ul class="task-list" id="taskList"></ul>
+    </div>
+
+    <script>
+        const taskInput = document.getElementById('taskInput');
+        const addTaskButton = document.getElementById('addTask');
+        const taskList = document.getElementById('taskList');
+        let taskToEdit = null; 
+
+        addTaskButton.addEventListener('click', () => {
+            const taskText = taskInput.value.trim();
+
+            if (taskText === '') {
+                alert('Por favor, insira uma tarefa.');
+                return;
+            }
+
+            if (taskToEdit) {
+
+                taskToEdit.textContent = taskText;
+                taskToEdit = null; 
+                addTaskButton.textContent = 'Adicionar'; 
+            } else {
+
+                const taskItem = document.createElement('li');
+                taskItem.classList.add('task-item');
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.addEventListener('change', () => {
+                    taskItem.classList.toggle('completed');
+                });
+
+                const taskSpan = document.createElement('span');
+                taskSpan.textContent = taskText;
+
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Editar';
+                editButton.classList.add('edit-btn');
+
+                editButton.addEventListener('click', () => {
+
+                    taskInput.value = taskSpan.textContent;
+                    taskToEdit = taskSpan; 
+                    addTaskButton.textContent = 'Salvar'; 
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Excluir';
+                deleteButton.addEventListener('click', () => {
+                    taskList.removeChild(taskItem);
+                });
+
+                taskItem.appendChild(checkbox);
+                taskItem.appendChild(taskSpan);
+                taskItem.appendChild(editButton);
+                taskItem.appendChild(deleteButton);
+                taskList.appendChild(taskItem);
+            }
+
+            taskInput.value = ''; // Limpa o campo de input
+            taskInput.focus();
+        });
+    </script>
+</body>
+</html>
