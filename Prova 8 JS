@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+                body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .converter-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #resultado {
+            margin-top: 20px;
+            font-size: 18px;
+            color: green;
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+    <div class="converter-container">
+        <h1>Conversor de Unidades</h1>
+        <label for="metros">Digite o valor em metros:</label>
+        <input type="number" id="metros" placeholder="Ex: 100">
+
+        <label for="unidade">Selecione a unidade de destino:</label>
+        <select id="unidade">
+            <option value="jarda">Jarda</option>
+            <option value="pe">Pé</option>
+            <option value="polegada">Polegada</option>
+            <option value="milha">Milha</option>
+        </select>
+
+        <button id="converter">Converter</button>
+
+        <div class="result" id="resultado"></div>
+    </div>
+
+    <script>
+        document.getElementById('converter').addEventListener('click', () => {
+            const metros = parseFloat(document.getElementById('metros').value);
+            const unidade = document.getElementById('unidade').value;
+            const resultadoDiv = document.getElementById('resultado');
+
+            if (isNaN(metros) || metros <= 0) {
+                resultadoDiv.textContent = 'Por favor, insira um valor válido em metros.';
+                return;
+            }
+
+            // Conversão com base nos fatores fornecidos
+            const fatores = {
+                jarda: 1.094,
+                pe: 3.281,
+                polegada: 39.37,
+                milha: 0.000621,
+            };
+
+            const resultado = (metros * fatores[unidade]).toFixed(3);
+
+            resultadoDiv.textContent = `Resultado: ${metros} metros equivalem a ${resultado} ${unidade}(s).`;
+        });
+    </script>
+    
+</body>
+</html>
