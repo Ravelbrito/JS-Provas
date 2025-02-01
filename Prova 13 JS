@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Caixa Eletrônico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #e3f2fd;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 350px;
+        }
+        h1 {
+            color: #333;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 90%;
+            margin-bottom: 10px;
+            text-align: center;
+            display: none;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .consultar {
+            background-color: #007bff;
+            color: white;
+        }
+        .sacar {
+            background-color: #ff4d4d;
+            color: white;
+        }
+        .depositar {
+            background-color: #28a745;
+            color: white;
+        }
+        .confirmar {
+            background-color: #ff9800;
+            color: white;
+            display: none;
+        }
+        p {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulador de Caixa Eletrônico</h1>
+        <input type="number" id="valor" placeholder="Digite um valor">
+        <br>
+        <button class="consultar" onclick="consultarSaldo()">Consultar Saldo</button>
+        <button class="sacar" onclick="mostrarCampo('sacar')">Sacar</button>
+        <button class="depositar" onclick="mostrarCampo('depositar')">Depositar</button>
+        <button class="confirmar" id="confirmar" onclick="confirmarOperacao()">Confirmar</button>
+        <p id="resultado"></p>
+    </div>
+
+    <script>
+        let saldo = 1000;
+        let operacao = "";
+
+        function consultarSaldo() {
+            document.getElementById("resultado").textContent = `Saldo atual: R$ ${saldo.toFixed(2)}`;
+            document.getElementById("valor").style.display = "none";
+            document.getElementById("confirmar").style.display = "none";
+        }
+
+        function mostrarCampo(acao) {
+            operacao = acao;
+            let campoValor = document.getElementById("valor");
+            let botaoConfirmar = document.getElementById("confirmar");
+            campoValor.style.display = "block";
+            botaoConfirmar.style.display = "block";
+            campoValor.focus();
+        }
+
+        function confirmarOperacao() {
+            let valor = parseFloat(document.getElementById("valor").value);
+            try {
+                if (isNaN(valor) || valor <= 0) {
+                    throw "Digite um valor válido.";
+                }
+                if (operacao === "sacar") {
+                    if (valor > saldo) {
+                        throw "Saldo insuficiente.";
+                    }
+                    saldo -= valor;
+                    document.getElementById("resultado").textContent = `Saque de R$ ${valor.toFixed(2)} realizado com sucesso. Saldo atual: R$ ${saldo.toFixed(2)}`;
+                } else if (operacao === "depositar") {
+                    saldo += valor;
+                    document.getElementById("resultado").textContent = `Depósito de R$ ${valor.toFixed(2)} realizado com sucesso. Saldo atual: R$ ${saldo.toFixed(2)}`;
+                }
+            } catch (erro) {
+                document.getElementById("resultado").textContent = erro;
+            }
+            document.getElementById("valor").style.display = "none";
+            document.getElementById("confirmar").style.display = "none";
+            document.getElementById("valor").value = "";
+        }
+    </script>
+</body>
+</html>
