@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Raças de Cachorros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .breed-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #loadingMessage {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Galeria de Raças de Cachorros</h1>
+    <div id="loadingMessage"></div>
+    <div class="breed-buttons" id="breed-buttons"></div>
+    <div class="gallery" id="gallery"></div>
+
+    <script>
+        // Função para buscar as raças de cachorros
+        async function fetchBreeds() {
+            try {
+                document.getElementById("loadingMessage").innerText = "Carregando raças...";
+                let response = await fetch('https://dog.ceo/api/breeds/list/all');
+                
+                if (!response.ok) {
+                    throw new Error("Não foi possível carregar as raças de cachorros.");
+                }
+
+                let data = await response.json();
+                let breeds = Object.keys(data.message);
+                
+                let buttonsContainer = document.getElementById("breed-buttons");
+                breeds.forEach(breed => {
+                    let button = document.createElement("button");
+                    button.textContent = breed;
+                    button.onclick = () => fetchImages(breed);
+                    buttonsContainer.appendChild(button);
+                });
+
+                document.getElementById("loadingMessage").innerText = ""; // Limpa a mensagem após carregar as raças
+            } catch (error) {
+                console.error("Erro ao buscar raças:", error);
+                document.getElementById("loadingMessage").innerText = `Erro: ${error.message}`;
+            }
+        }
+
+        // Função para buscar as imagens de uma raça
+        async function fetchImages(breed) {
+            try {
+                document.getElementById("loadingMessage").innerText = `Carregando imagens de ${breed}...`;
+
+                let response = await fetch(`https://dog.ceo/api/breed/${breed}/images/random/4`);
+                
+                if (!response.ok) {
+                    throw new Error(`Não foi possível carregar as imagens para a raça ${breed}.`);
+                }
+
+                let data = await response.json();
+                let gallery = document.getElementById("gallery");
+                gallery.innerHTML = "";
+
+                data.message.forEach(imageUrl => {
+                    let img = document.createElement("img");
+                    img.src = imageUrl;
+                    img.alt = breed;
+                    gallery.appendChild(img);
+                });
+
+                document.getElementById("loadingMessage").innerText = ""; // Limpa a mensagem após carregar as imagens
+            } catch (error) {
+                console.error("Erro ao buscar imagens:", error);
+                document.getElementById("loadingMessage").innerText = `Erro: ${error.message}`;
+            }
+        }
+
+        // Chama a função para buscar as raças ao carregar a página
+        fetchBreeds();
+    </script>
+</body>
+</html>
