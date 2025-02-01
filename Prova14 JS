@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Raças de Cachorros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .breed-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Galeria de Raças de Cachorros</h1>
+    <div class="breed-buttons" id="breed-buttons"></div>
+    <div class="gallery" id="gallery"></div>
+
+    <script>
+        async function fetchBreeds() {
+            try {
+                let response = await fetch('https://dog.ceo/api/breeds/list/all');
+                let data = await response.json();
+                let breeds = Object.keys(data.message);
+                
+                let buttonsContainer = document.getElementById("breed-buttons");
+                breeds.forEach(breed => {
+                    let button = document.createElement("button");
+                    button.textContent = breed;
+                    button.onclick = () => fetchImages(breed);
+                    buttonsContainer.appendChild(button);
+                });
+            } catch (error) {
+                console.error("Erro ao buscar raças:", error);
+            }
+        }
+
+        async function fetchImages(breed) {
+            try {
+                let response = await fetch(`https://dog.ceo/api/breed/${breed}/images/random/4`);
+                let data = await response.json();
+                let gallery = document.getElementById("gallery");
+                gallery.innerHTML = "";
+                
+                data.message.forEach(imageUrl => {
+                    let img = document.createElement("img");
+                    img.src = imageUrl;
+                    img.alt = breed;
+                    gallery.appendChild(img);
+                });
+            } catch (error) {
+                console.error("Erro ao buscar imagens:", error);
+            }
+        }
+
+        fetchBreeds();
+    </script>
+</body>
+</html>
